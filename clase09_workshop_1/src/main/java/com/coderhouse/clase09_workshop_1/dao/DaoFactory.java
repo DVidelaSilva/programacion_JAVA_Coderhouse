@@ -28,7 +28,7 @@ public class DaoFactory {
     }
 
     @Transactional
-    public void createAlumno(Curso curso){
+    public void createCurso(Curso curso){
         em.persist(curso);
     }
 
@@ -47,7 +47,7 @@ public class DaoFactory {
     }
 
     @Transactional
-    public List<Curso> getAllCurso(){
+    public List<Curso> getAllCursos(){
         TypedQuery<Curso> query = em.createQuery("SELECT c FROM Curso c", Curso.class);
         List<Curso> cursos = query.getResultList();
         cursos.forEach(c -> Hibernate.initialize(c.getCategoria()));
@@ -91,26 +91,31 @@ public class DaoFactory {
 
     @Transactional
     public void inscribirAlumnoEnCurso(Long cursoId, Long alumnoId) throws Exception {
+        Curso curso = getCursoById(cursoId);
+		Alumno alumno = getAlumnoById(alumnoId);
 
-        try {
-            Curso curso = getCursoById(cursoId);
-            Alumno alumno = getAlumnoById(alumnoId);
+		System.out.println(curso.toString());
+		System.out.println(alumno.toString());
+		
+		Hibernate.initialize(alumno.getCursos());
+		Hibernate.initialize(curso.getAlumnos());
 
-            if(!curso.getAlumnos().contains(alumno)){
-                curso.getAlumnos().add(alumno);
-            }
+		
+		if (!curso.getAlumnos().contains(alumno)) {
+			// Verifica si el alumno ya está inscrito en el curso.
+		    // Si no está, lo agrega a la lista de alumnos del curso.
+			curso.getAlumnos().add(alumno);
+		}
 
-            if(!alumno.getCursos().contains(curso)){
-                alumno.getCursos().add(curso);
-            }
+		if (!alumno.getCursos().contains(curso)) {
+			 // Verifica si el curso ya está en la lista de cursos del alumno.
+		    // Si no está, lo agrega a la lista de cursos del alumno.
+			alumno.getCursos().add(curso);
+		}
 
-            em.merge(curso);
-            em.merge(alumno);
-            
-        }catch (Exception e){
-            throw new Exception("El curso no existe");
-        }
-        
+		em.merge(curso);
+		em.merge(alumno);
+
 
     }
 

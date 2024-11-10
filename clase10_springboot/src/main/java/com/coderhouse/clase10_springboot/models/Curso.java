@@ -1,4 +1,4 @@
-package com.coderhouse.clase09_workshop_1.models;
+package com.coderhouse.clase10_springboot.models;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -20,14 +20,6 @@ import jakarta.persistence.Table;
 public class Curso {
 
     
-
-    // public Curso(String nombre, Categoria categoria) {
-    //     this.nombre = nombre;
-    //     this.categoria = categoria;
-    // }
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +28,10 @@ public class Curso {
     private String nombre;
     
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "curso_alumno", joinColumns = @JoinColumn(name = "curso_id"), inverseJoinColumns = @JoinColumn(name = "alumno_id"))
+    @JoinTable(
+            name = "curso_alumno", 
+            joinColumns = @JoinColumn(name = "curso_id"), 
+            inverseJoinColumns = @JoinColumn(name = "alumno_id"))
     private List<Alumno> alumnos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Clase09Workshop1Application<clase09_workshop_1>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.coderhouse.clase09_workshop_1.Clase09Workshop1Application",
+            "projectName": "clase09_workshop_1",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
