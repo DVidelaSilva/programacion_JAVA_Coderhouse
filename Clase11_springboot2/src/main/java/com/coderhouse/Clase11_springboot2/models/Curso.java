@@ -1,6 +1,9 @@
 package com.coderhouse.Clase11_springboot2.models;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 
 import jakarta.persistence.Column;
@@ -32,6 +35,7 @@ public class Curso {
             name = "curso_alumno", 
             joinColumns = @JoinColumn(name = "curso_id"), 
             inverseJoinColumns = @JoinColumn(name = "alumno_id"))
+    @JsonIgnore
     private List<Alumno> alumnos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)

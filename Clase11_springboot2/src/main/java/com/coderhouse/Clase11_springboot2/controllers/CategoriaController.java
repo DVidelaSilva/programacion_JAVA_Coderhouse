@@ -17,33 +17,91 @@ import com.coderhouse.Clase11_springboot2.repositories.CategoriaRepository;
 
 
 
+
+import org.springframework.http.HttpStatus;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+import org.springframework.web.bind.annotation.PutMapping;
+
+
+
+
+import com.coderhouse.Clase11_springboot2.services.CategoriaService;
+
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private CategoriaService categoriaService;  // Inyeccion de la dependencia alumnoRepository
 
     @GetMapping
-        public List<Categoria> getAllCategorias() {
-        return categoriaRepository.findAll();
-    }
-
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long id){
-        if(categoriaRepository.existsById(id)){
-            Categoria categoria = categoriaRepository.findById(id).get();
+    public ResponseEntity<List<Categoria>> getAllCategorias(){
+        try{
+            List<Categoria> categoria = categoriaService.getAllCategoria();
             return ResponseEntity.ok(categoria);
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Categoria> getCategoriaById(@PathVariable Long id){
+        try {
+            Categoria categoria = categoriaService.findById(id);
+
+            return ResponseEntity.ok(categoria);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+
     @PostMapping
-    public Categoria createCategoria(@RequestBody Categoria categoria){
-        return categoriaRepository.save(categoria);
+    public ResponseEntity<Categoria> createCategoria(@RequestBody Categoria categoria){
+        try {
+
+            Categoria createdCategoria = categoriaService.saveCategoria(categoria);
+            return ResponseEntity.ok(createdCategoria);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Categoria> updateCategoria(@PathVariable Long id, @RequestBody Categoria categoriaDetails){
+        try {
+
+            Categoria updateCategoria =  categoriaService.updateCategoria(id, categoriaDetails);
+            return ResponseEntity.ok(updateCategoria);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();    
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id){
+        try {
+            
+            categoriaService.deleteCategoria(id);
+            return ResponseEntity.noContent().build();
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();    
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }
